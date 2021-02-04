@@ -1,5 +1,6 @@
 #coding=utf-8
 #!/usr/bin/python
+import json
 
 import pymysql
 
@@ -8,8 +9,9 @@ class MYSQLHelper:
     """
     对pymysql的简单封装
     """
-    def __init__(self,host,user,pwd,db):
+    def __init__(self,host,port,user,pwd,db):
         self.host = host
+        self.port = port
         self.user = user
         self.pwd = pwd
         self.db = db
@@ -77,23 +79,51 @@ class MYSQLHelper:
             self.conn.commit()
             self.conn.close()
         """
-        cur = self.__GetConnect()
-        cur.execute(sql)
-        self.conn.commit()
-        self.conn.close()
+        try:
+            cur = self.__GetConnect()
+            cur.execute(sql)
+            self.conn.commit()
+            self.conn.close()
+            return 1
+        except:
+            return 0
 
 
 
 
-def main():
+def sqlrun(env,db,sql):
+    sqlenv = ''
+    if isinstance(env,str) and env[0]=='{':
+        sqlenv=json.loads(env)
+        host = sqlenv["host"]
+        port = sqlenv["port"]
+        user = sqlenv["user"]
+        pwd = sqlenv["pwd"]
+    else:
+        host = env["host"]
+        port = env["port"]
+        user = env["user"]
+        pwd = env["pwd"]
+    db = db
+    mysqlHelper = MYSQLHelper(host=host,port=port,user=user,pwd=pwd,db=db)
+    if "insert" in sql or "INSERT" in sql:
+        insertStatus= mysqlHelper.ExecNonQuery(sql)
+        return insertStatus
+    if  "update" in sql or "UPDATE" in sql:
+        updateStatus = mysqlHelper.ExecNonQuery(sql)
+        return updateStatus
+    elif "select" or "SELECT" in sql:
+        resList = mysqlHelper.ExecQuery(sql)
+        return resList
+    else:
+        raise(NameError,"sql语句有误")
 
-    mysqlhelper = MYSQLHelper(host="localhost",user="root",pwd="123456",db="fxdatabase")
-    resList = mysqlhelper.ExecQuery("SELECT * from article_info")
-    print(resList[0])
-    print(resList[1])
-    #for inst in resList:
-    #    print(inst)
-    mysqlhelper.ExecNonQuery("INSERT INTO fxdatabase.course(coursename, course_level) VALUES ('test13333', 'high33332');")
-    mysqlhelper.ExecNonQuery("UPDATE fxdatabase.course SET coursename = 'test1111', course_level = 'high222222' WHERE coursename = 'test1' AND course_level = 'high2' LIMIT 1;")
+
 if __name__ == '__main__':
-    main()
+    service = '{"host":"192.168.2.10","port":"3306","user":"root","pwd":"123456"}'
+    sql = "SELECT * from book_info"
+    sql2 = "INSERT INTO `book`.`book_info`( `book_name`, `book_sort_id`, `book_author`, `book_price`, `book_type`, `book_publish`, `book_sum`, `book_mark`, `update_date`) VALUES ( 't5534', 1, 'fangxiao1', 101.00, 'kexue1', 'jixie1', '100', '0', '2020-09-28 07:24:15');"
+    sql3 = "UPDATE `book`.`book_info` SET `book_publish` = 'ji333354654654xie1', `book_sum` = '10100', `book_mark` = '0', `update_date` = '2020-09-28 07:24:15' WHERE `book_id` = 14";
+    print(sqlrun(service,"book",sql))
+    print(sqlrun(service,"book", sql2))
+    print(sqlrun(service,"book",sql3))
