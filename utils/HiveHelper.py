@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 from pyhive import hive
 #from impala.dbapi import connect
+import configparser
+import os
+from utils import configHelper
 
 class HiveClient:
-    def __init__(self, host='192.168.4.71', port=10000, username='root', password='!QAZxsw2', database='gmall', auth='LDAP'):
+    def __init__(self,database):
         """
         create connection to hive server2
         """
-        self.conn = hive.connect(host=host,
-                                port=port,
-                                username=username,
-                                password=password,
-                                database=database,
-                                auth=auth)
+        self.config = configHelper.ConfigHelper("hive.ini","hiveclient")
+        self.configTulpe = self.config.readconfig()
+        self.conn = hive.connect(host=self.configTulpe[0][1],
+                                port=self.configTulpe[1][1],
+                                username=self.configTulpe[2][1],
+                                password=self.configTulpe[3][1],
+                                auth=self.configTulpe[4][1],
+                                database=database)
 
 
     def query(self, sql):
@@ -42,6 +47,6 @@ class HiveClient:
 
 
 if __name__ == '__main__':
-    conn = HiveClient()
+    conn = HiveClient("gmall")
     a = conn.query("SELECT * from stg_sale_account where id=3110 and dt='2019-03-02'")
     print(a)

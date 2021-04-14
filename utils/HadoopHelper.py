@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 import gzip
 from hdfs.client import Client
-from hdfs3 import HDFileSystem
-import pandas as pd
-import pyhdfs
-from fastparquet import ParquetFile
-import petl as etl
 import pymysql
 
 def testhadoop():
@@ -22,10 +17,7 @@ def testhadoop():
     print(client.content(hdfs_path="/warehouse/gmall/stg/stg_category/dt=2019-03-03/part-m-00000.lzo",strict=True))
 
 
-def testetl():
-    connection = pymysql.connect(host="10.100.1.111", user="readonly",password="!QAZxsw2",database="sale",charset="utf8")
-    table = etl.fromdb(connection, 'SELECT * FROM company')
-    etl.fromdataframe(table)
 
 if __name__ == '__main__':
-    print(testetl())
+    pass
+
