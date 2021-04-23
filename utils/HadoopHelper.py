@@ -8,7 +8,8 @@ from struct import pack, unpack
 from utils import configHelper
 import traceback
 import logging
-import datetime
+from datetime import datetime
+import time
 #import lzo_indexer
 import pandas as pd
 
@@ -25,11 +26,11 @@ class HadoopClient:
 
     # 下载hdfs的数据原件
     # 返回文件的路径
-    def dataDownload(self,dataPath):
-        self.dataDownloadDir = dataPath.split("/")[-2]
-        self.savePath = self.configPath[0][1]+"/"+self.dataDownloadDir
+    def dataDownload(self,filePath):
+        self.dataDownloadDir = filePath.split('/')[-2]
+        self.savePath = '/'+self.configPath[0][1]+"/"+self.dataDownloadDir+'-'+str(time.time())
         os.mkdir(self.savePath)
-        rst = self.client.download(dataPath, self.savePath)
+        rst = self.client.download(filePath, self.savePath)
         if isinstance(rst,str):
             return rst
         else:
@@ -50,9 +51,16 @@ class HadoopClient:
         return pd.read_table(filePath,sep='\t',header=None,index_col=None,
                                dtype=None, encoding='utf-8', engine=None, nrows=None)
 
+    def fileList(self,hdfsPath):
+        return self.client.list(hdfsPath,status=False)
+
+    def fileDelete(self,hdfsPath):
+        pass
 
 if __name__ == '__main__':
     H = HadoopClient()
-    #path = H.dataDownload("/warehouse/gmall/stg/stg_category/dt=2019-03-06/part-m-00000.lzo")
-    #print(H.decompressLzo(path))
-    print(H.readFile("/usr/local/WarehouseData/tmpdata/dt=2019-03-06/part-m-00000"))
+    path = H.dataDownload("/warehouse/gmall/stg/stg_category/dt=2019-03-06/part-m-00000.lzo")
+    print(path)
+    print(H.decompressLzo(path))
+    print(H.readFile(path[:-4]))
+    #print(H.fileList("/warehouse/gmall/stg/stg_category"))
