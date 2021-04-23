@@ -1,4 +1,5 @@
-# coding: utf-8
+#coding=utf-8
+#!/usr/bin/python
 from elasticsearch6 import Elasticsearch
 from elasticsearch.helpers import bulk
 from elasticsearch import exceptions

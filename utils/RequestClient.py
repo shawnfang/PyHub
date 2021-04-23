@@ -1,4 +1,5 @@
-
+#coding=utf-8
+#!/usr/bin/python
 import requests
 import json
 import sys
@@ -11,20 +12,20 @@ from pandas import *
 
 class RequestClient(object):
     """
-    ÎªsosotestÖØĞÂ¶¨ÒåµÄrequestsÀà
+    ä¸ºsosotesté‡æ–°å®šä¹‰çš„requestsç±»
     """
 
     def __init__(self):
-        self.response_type = 0  # ÈôÎª1Ê± responseµÄ·µ»ØÖµµÄÀàĞÍÊÇstr ¼°¿ÉÒÔÈ¡³ö
-        self.header_print = None  # ÇëÇóÍ·
+        self.response_type = 0  # è‹¥ä¸º1æ—¶ responseçš„è¿”å›å€¼çš„ç±»å‹æ˜¯str åŠå¯ä»¥å–å‡º
+        self.header_print = None  # è¯·æ±‚å¤´
         self.url = None  # url
-        self.data_print = None  # ²ÎÊı
+        self.data_print = None  # å‚æ•°
         self.response_text = None
-        self.response_json = None  # ¿ÉÒÔÖ±½Óµ÷ÓÃ ·µ»ØÖµÎªjson¸ñÊ½µÄÊ±ºò
+        self.response_json = None  # å¯ä»¥ç›´æ¥è°ƒç”¨ è¿”å›å€¼ä¸ºjsonæ ¼å¼çš„æ—¶å€™
         self.session = requests.session()
         self.header = None
         self.api_root_url = None
-        self.data = None  # ÓÃÀ´´æ´¢ÇëÇóµÄ²ÎÊı
+        self.data = None  # ç”¨æ¥å­˜å‚¨è¯·æ±‚çš„å‚æ•°
         self.news = ''
 
     def get(self, url, **kwargs):
@@ -102,7 +103,7 @@ class RequestClient(object):
         self.url = str(url)
         if json:
             self.data = jsondata
-            self.data_print = "ÇëÇó²ÎÊı" + str(json)
+            self.data_print = "è¯·æ±‚å‚æ•°" + str(json)
         else:
             self.data = data
             self.data_print = json.dumps(data, indent=4, ensure_ascii=False)
@@ -156,7 +157,7 @@ if __name__ == '__main__':
     rest.api_root_url ='https://oapi.dingtalk.com'
     rest.session.headers.update(header)
     params ={'access_token':'11bc7dbf8a74892e267193d649b803418919b69b3372ef22ae5573f0b12fed28'}
-    dict1 = {"msgtype": "text","text": {"content": "ÎÒ¾ÍÊÇÎÒ, @15986808594 ÊÇ²»Ò»ÑùµÄÑÌ»ğ" },"at": {"atMobiles": ["15986808594" ], "isAtAll": False}}
+    dict1 = {"msgtype": "text","text": {"content": "æˆ‘å°±æ˜¯æˆ‘, @15986808594 æ˜¯ä¸ä¸€æ ·çš„çƒŸç«" },"at": {"atMobiles": ["15986808594" ], "isAtAll": False}}
     print(rest.api_root_url)
     res = rest.post('/robot/send',params=params,jsondata=dict1,verify=False)
     print(res.text)

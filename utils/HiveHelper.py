@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*-
+#coding=utf-8
+#!/usr/bin/python
 from pyhive import hive
 #from impala.dbapi import connect
 import configparser
 import os
 from utils import configHelper
+import pandas as pd
 
 class HiveClient:
     def __init__(self,database):
@@ -28,6 +30,10 @@ class HiveClient:
             cursor.execute(sql)
             return cursor.fetchall()
 
+    def pdQuery(self,sql):
+        df = pd.read_sql(sql,self.conn)
+        return df
+
     def insert(self, sql):
         """
         insert action
@@ -50,3 +56,5 @@ if __name__ == '__main__':
     conn = HiveClient("gmall")
     a = conn.query("SELECT * from stg_sale_account where id=3110 and dt='2019-03-02'")
     print(a)
+    pd = conn.pdQuery("SELECT * from stg_sale_account where  dt='2019-03-02'")
+    print(pd)

@@ -1,4 +1,5 @@
-# coding: utf-8
+#coding=utf-8
+#!/usr/bin/python
 from rediscluster import StrictRedisCluster
 
 class RedisCluster:  # 连接redis集群
