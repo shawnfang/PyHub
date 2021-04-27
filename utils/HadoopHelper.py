@@ -47,9 +47,10 @@ class HadoopClient:
             return 0
 
     def readFile(self,filePath):
+        self.newFilePath = filePath[:-4]
         pd.set_option('display.max_columns',None)
-        return pd.read_table(filePath,sep='\t',header=None,index_col=None,
-                               dtype=None, encoding='utf-8', engine=None, nrows=None)
+        return pd.read_table(self.newFilePath,sep='\t',header=None,index_col=None,
+                               dtype=None, encoding='utf-8', engine=None, nrows=None,error_bad_lines=False)
 
     def fileList(self,hdfsPath):
         return self.client.list(hdfsPath,status=False)
@@ -59,8 +60,8 @@ class HadoopClient:
 
 if __name__ == '__main__':
     H = HadoopClient()
-    path = H.dataDownload("/warehouse/gmall/stg/stg_category/dt=2019-03-06/part-m-00000.lzo")
+    path = H.dataDownload("/warehouse/gmall/stg/stg_sale_account/dt=2019-03-01/part-m-00000.lzo")
     print(path)
     print(H.decompressLzo(path))
-    print(H.readFile(path[:-4]))
+    print(H.readFile(path))
     #print(H.fileList("/warehouse/gmall/stg/stg_category"))
