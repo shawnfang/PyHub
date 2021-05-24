@@ -14,7 +14,7 @@ class SqlalchemyClient:
 
     def query(self,sql):
         pd.set_option('display.max_columns', None)
-        df_read = pd.read_sql_query(sql,self.conn)
+        df_read = pd.read_sql(sql,self.conn)
         return df_read
 
 if __name__ == '__main__':

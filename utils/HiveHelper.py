@@ -45,6 +45,12 @@ class HiveClient:
             except:
                 self.conn.rollback()
 
+    def desc(self):
+        with self.conn.cursor() as cursor:
+            for desc in cursor.description:
+                print(desc)
+
+
     def close(self):
         """
         close connection
@@ -54,7 +60,10 @@ class HiveClient:
 
 if __name__ == '__main__':
     conn = HiveClient("gmall")
-    a = conn.query("SELECT * from stg_sale_account where id=3110 and dt='2019-03-02'")
-    print(a)
-    pd = conn.pdQuery("SELECT * from stg_sale_account where  dt='2019-03-02'")
-    print(pd)
+   # a = conn.query("SELECT * from stg_sale_account where id=3110 and dt='2019-03-02'")
+    #print(a)
+    #pd = conn.pdQuery("SELECT * from stg_sale_account where  dt='2019-03-02'")
+    #print(pd)
+
+    s = conn.desc()
+    print(s)
